@@ -8,6 +8,15 @@ class Product extends React.Component {
    
   state = {
    catgory: [],
+   data:[],
+   name:'',
+   category:'',
+   categoryId:'',
+   address:'',
+   price:'',
+   city:'',
+   image:''
+   
  }
    componentDidMount() {
       axios.get(`http://theworkartech.uw.r.appspot.com/api/v1/theworkar/admin/appointments`)
@@ -17,6 +26,39 @@ class Product extends React.Component {
           this.setState({ catgory });
         })
     }
+    productChange = event => {
+      let data = event.target.name;
+      let val = event.target.value;
+      console.log( this.setState({ 
+        [data]: val
+      }))
+    }
+
+    addProductSubmit = event => {
+      event.preventDefault();
+  
+      const addProduct = {
+        userName:this.state.userName ,
+        userPhone:parseFloat(this.state.userPhone) ,
+        scheduleDate:this.state.scheduleDate ,
+        category:this.state.category ,
+        address:this.state.address ,
+        status:'PENDING' ,
+        lat:parseFloat(this.state.lat) ,
+        lng:parseFloat(this.state.lng )
+      };
+      console.log("hi",addProduct)
+  
+      axios.post(`http://theworkartech.uw.r.appspot.com/api/v1/theworkar/service/register`,addProduct)
+        .then(res => {
+         // alert("ok");
+          //console.log(res);
+  
+          console.log(res.data);
+        
+        })
+   }
+  
 
     render() {
        return (
@@ -31,19 +73,19 @@ class Product extends React.Component {
                   <div class="col-md-10 mb-3">
                      <div class="card text-left">
                         <div class="card-body">
-                           <form action="https://www.theworkar.com/admin/submit_medicine" enctype="multipart/form-data" method="post" accept-charset="utf-8">
+                           <form onSubmit={this.addProductSubmit}>
                               <div class="row">
                                  <div class="form-group col-md-8 mb-3">
                                     <label for="password">Product Name</label>
-                                    <input name="p_name" class="form-control form-control-rounded" type="text" required=""/>
+                                    <input name="name" class="form-control form-control-rounded" type="text" onChange={this.productChange}  required=""/>
                                  </div>
                                  <div class="form-group col-md-4 mb-3">
                                     <label for="password">Product Image</label>
-                                    <input name="p_img" class="form-control form-control-rounded" accept="image/*" id="password" type="file" required="" />
+                                    <input name="image" onChange={this.productChange}  class="form-control form-control-rounded" accept="image/*" id="password" type="file" required="" />
                                  </div>
                                  <div class="form-group col-md-4 mb-3">
                                     <label for="password">Select Category</label>
-                                    <select name="p_category" class="form-control form-control-rounded" id="cat" required="">
+                                    <select name="p_category" onChange={this.productChange}  class="form-control form-control-rounded" id="cat" required="">
                                        {
                                         this.state.catgory.map(function(item,key){
                                          return <option  key={key} value={item.id}>{item.category}</option>
@@ -59,15 +101,15 @@ class Product extends React.Component {
                                  </div> */}
                                  <div class="form-group col-md-4 mb-3">
                                     <label for="password">Price</label>
-                                    <input name="p_code" class="form-control form-control-rounded" type="text" />
+                                    <input name="price" onChange={this.productChange}  class="form-control form-control-rounded" type="text" />
                                  </div>
                                  <div class="form-group col-md-4 mb-3">
                                     <label for="password">City</label>
-                                    <input name="p_brand" class="form-control form-control-rounded" type="text" />
+                                    <input name="city" class="form-control form-control-rounded" type="text" />
                                  </div>
                                  <div class="form-group col-md-4 mb-3">
                                     <label for="password">Address</label>
-                                    <input name="p_price" class="form-control form-control-rounded" type="number" required="" />
+                                    <input name="address" onChange={this.productChange}  class="form-control form-control-rounded" type="text" required="" />
                                  </div>
                                  {/* <div class="form-group col-md-4 mb-3">
                                     <label for="password">Product Selling Price (INR)</label>
